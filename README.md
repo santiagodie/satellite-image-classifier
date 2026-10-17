@@ -1,8 +1,13 @@
-# Satellite Image Classifier
+<p align="center"><img src="assets/banner.svg" width="100%" alt="Satellite Image Classifier · University of La Rioja" /></p>
 
-Satellite image classification with fastai transfer learning (ResNet18), plus a comparison of five CNN architectures, a CPU vs GPU timing study and a learning rate finder experiment.
+<p align="center">Satellite image classification with fastai transfer learning (ResNet18), plus a comparison of five CNN architectures, a CPU vs GPU timing study and a learning rate finder experiment.</p>
 
-## Problem
+<p align="center">
+  <img src="https://img.shields.io/badge/language-Python-C9A227?style=flat-square&labelColor=0B1F3A" alt="Language: Python" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-C9A227?style=flat-square&labelColor=0B1F3A" alt="License: MIT" /></a>
+</p>
+
+## About the Project
 
 Given a satellite image, predict its land-cover class. The model predicts one of 4 classes:
 
@@ -13,7 +18,21 @@ Given a satellite image, predict its land-cover class. The model predicts one of
 
 Each class is split 80/20 into train and test folders. The training folder is then split again 80/20 into training and validation (3,604 / 900 images).
 
-## Notebooks
+### Data
+
+[Satellite Image Classification](https://www.kaggle.com/datasets/mahmoudreda55/satellite-image-classification) is a public dataset on Kaggle by `mahmoudreda55`. The Kaggle page lists the license as "Data files © Original Authors". The data is not included in this repository.
+
+### Model
+
+The ResNet18 classifier from `E2_Principal.ipynb` is available on the Hugging Face Hub: [`santiagodie/satellite`](https://huggingface.co/santiagodie/satellite) (uploaded with `push_to_hub_fastai`).
+
+A Gradio app for the model was deployed on Hugging Face Spaces, but free CPU hardware is no longer available for this account.
+
+## Built With
+
+Python · fastai · PyTorch · timm · scikit-learn · pandas · Matplotlib · Hugging Face Hub · Gradio · Google Colab
+
+## How It Works
 
 All notebooks are written in Spanish.
 
@@ -24,11 +43,12 @@ All notebooks are written in Spanish.
 | 3 | [`E2_Adicional2_cpu_vs_gpu.ipynb`](E2_Adicional2_cpu_vs_gpu.ipynb) | Trains the same ResNet18 for 3 epochs on CPU and on GPU and compares training and inference times. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/santiagodie/satellite-image-classifier/blob/main/E2_Adicional2_cpu_vs_gpu.ipynb) |
 | 4 | [`E2_Adicional3_LR_finder.ipynb`](E2_Adicional3_LR_finder.ipynb) | Runs fastai's `lr_find` and compares the suggested learning rate (valley) with 1e-3 and 1e-2. | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/santiagodie/satellite-image-classifier/blob/main/E2_Adicional3_LR_finder.ipynb) |
 
-## Key results
+## Results
 
 All figures come from the saved notebook outputs.
 
 **Main model** (`E2_Principal.ipynb`, ResNet18, `fine_tune(5)`, trained on CPU):
+
 - Validation accuracy was 1.000 at the last epoch.
 - On the held-out test set, `learn.validate()` gives loss 0.0051 and accuracy **0.9982** (error rate 0.0018).
 - Before the test DataBlock was normalized with ImageNet statistics, test accuracy was only 0.312.
@@ -66,11 +86,9 @@ The GPU trains about 39× faster and runs inference about 29× faster, with the 
 
 The suggested learning rate gives the lowest validation loss, although all three reach about 99.9–100% accuracy.
 
-## Tech stack
+## Getting Started
 
-Python · fastai · PyTorch · timm · scikit-learn · pandas · Matplotlib · Hugging Face Hub · Gradio · Google Colab
-
-## How to run
+### Installation
 
 Open a notebook in Google Colab with the badges above. A GPU runtime is recommended; the CPU run takes about 44 minutes for 3 epochs. These are the install commands as they appear in the notebooks (not re-verified):
 
@@ -82,19 +100,11 @@ pip install huggingface_hub["fastai"] -Uq  # E2_Principal.ipynb, only needed to 
 
 No versions are pinned. `E2_Principal.ipynb` imports `google.colab`, so it is meant to run in Colab.
 
+### Usage
+
 The notebooks download a zipped copy of the dataset (`archive.zip`), the exported model (`satellite_model.pkl`) and the five external test images with `wget`. Those URLs have been replaced by the placeholder `DATA_URL`. To run the notebooks, download the dataset from Kaggle (see [Data](#data)) and provide `archive.zip` with one folder per class (`cloudy`, `desert`, `green_area`, `water`). The external test images are not included.
 
-## Data
-
-[Satellite Image Classification](https://www.kaggle.com/datasets/mahmoudreda55/satellite-image-classification) is a public dataset on Kaggle by `mahmoudreda55`. The Kaggle page lists the license as "Data files © Original Authors". The data is not included in this repository.
-
-## Model
-
-The ResNet18 classifier from `E2_Principal.ipynb` is available on the Hugging Face Hub: [`santiagodie/satellite`](https://huggingface.co/santiagodie/satellite) (uploaded with `push_to_hub_fastai`).
-
-A Gradio app for the model was deployed on Hugging Face Spaces, but free CPU hardware is no longer available for this account.
-
-## Known limitations
+## Known Limitations
 
 - **The dataset was cleaned, but the model was not retrained afterwards.** `ImageClassifierCleaner` removed 14 training images (7 `cloudy`, 4 `green_area`, 3 `water`). The notebook says the model should be trained again, but no training cell follows. The exported `satellite_model.pkl` and the model on the Hub were both trained before the cleaning.
 - Near-perfect validation and test scores come from images of the same source. On five external images, accuracy drops to 2/5, with a strong bias towards `desert`.
@@ -103,6 +113,14 @@ A Gradio app for the model was deployed on Hugging Face Spaces, but free CPU har
 - The architecture, CPU/GPU and LR finder comparisons report validation accuracy on a random 20% split of the training folder, not on the held-out test set. Each configuration was run only once.
 - MobileNetV3 Small reaches 97.2% accuracy but has a validation loss of 137.19, with spikes up to 1747.8 during training, which points to unstable training.
 - The best architecture in the comparison (ResNet34) was not used for the published model, which is still the ResNet18 from the main notebook.
+
+## License
+
+Released under the [MIT License](LICENSE).
+
+## Contact
+
+Santiago Die · [GitHub](https://github.com/santiagodie) · [LinkedIn](https://www.linkedin.com/in/santiago-die-morejon)
 
 ---
 
